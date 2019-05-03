@@ -61,11 +61,6 @@ def parse_and_render(issues):
     print (ctx)
 
 
-def main():
-    url = 'https://github.com/jaegertracing/jaeger-operator'
+def main(url):
     issues = scraper(url)
     parse_and_render(issues)
-
-
-if __name__ == '__main__':
-    main()

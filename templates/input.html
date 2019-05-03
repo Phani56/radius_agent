@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
+
+<div class="search-card">
+  <h2>Repo issues data</h2>
+  <form action = "http://localhost:5000/issues" method = "POST">
+    <input type="text" placeholder="git repo url" class="search-input" />
+  </form>
+  <p><input type = "submit" value = "submit" /></p>
+</div>
+
+<div class="rect"></div>
+</body>
+</html>

@@ -8,8 +8,14 @@ h2 {
 
 .search-card{
     margin: 0 auto;
-    background: green;
-    width: 50%;
+    background: transparent;
+    box-sizing: border-box;
+    background-size: auto;
+    position: absolute;
+    padding: 80px;
+    top: 2px;
+    height 100px;
+    width: 200px;
     display: flex;
 }
 
@@ -18,9 +24,3 @@ h2 {
     /*border-radius: 2px;*/
     /*width: ;*/
 /*}*/
-
-.rect{
-    background: yellow;
-    width: 500px;
-    height: 200px;
-}
