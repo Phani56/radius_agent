@@ -1,0 +1,26 @@
+body{
+    background:#ed6451;
+}
+
+h2 {
+    color: skyblue;
+}
+
+.search-card{
+    margin: 0 auto;
+    background: green;
+    width: 50%;
+    display: flex;
+}
+
+
+/*.search-input{*/
+    /*border-radius: 2px;*/
+    /*width: ;*/
+/*}*/
+
+.rect{
+    background: yellow;
+    width: 500px;
+    height: 200px;
+}
