@@ -1,23 +1,62 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+html, body {
+    height: 100%;
+}
+
 body{
-    background:#ed6451;
+    background:darkslategrey;
 }
 
 h2 {
-    color: skyblue;
+    color: #fff;
 }
 
-.search-card{
-    margin: 0 auto;
-    background: transparent;
-    box-sizing: border-box;
-    background-size: auto;
-    position: absolute;
-    padding: 80px;
-    top: 2px;
-    height 100px;
-    width: 200px;
-    display: flex;
+.table > tbody > tr > td {
+     vertical-align: middle;
 }
+
+
+
+.search-input-wrapper{
+    text-align: center;
+}
+
+.search-input{
+    width:400px;
+    height:40px;
+    padding-left:15px;
+    border-radius:6px;
+    border:none;
+    color:#0F0D0D;
+    font-weight:500;
+    background-color:#E2EFF7;
+}
+
+.search-card {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+
+.wrapper {
+    text-align: center;
+}
+
+.search-button {
+    width: 75px;
+    height: 35px;
+    background: #00B4CC;
+    text-align: center;
+    color: white;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+
+
 
 
 /*.search-input{*/
