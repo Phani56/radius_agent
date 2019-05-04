@@ -16,6 +16,21 @@ h2 {
      vertical-align: middle;
 }
 
+.table{
+    align-items: center;
+    justify-content: center;
+}
+
+
+.homepage{
+    background-color: skyblue;
+    box-shadow: 0 5px 0 deepskyblue;
+    color: white;
+    padding: 1em 1.5em;
+    position: relative;
+    text-decoration: none;
+    text-transform: uppercase;
+}
 
 
 .search-input-wrapper{
@@ -45,17 +60,36 @@ h2 {
 }
 
 .search-button {
-    width: 75px;
-    height: 35px;
+    width: 100px;
+    height: 40px;
     background: #00B4CC;
     text-align: center;
     color: white;
     border-radius: 0 5px 5px 0;
     cursor: pointer;
     font-size: 20px;
+    top: 60%;
 }
 
+.no-issues{
+    color:white;
+    font-family:"Whitney A","Whitney B","Whitney-Light","Catamaran","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight:600;
+    font-size:40px
+}
 
+.invalid-input{
+    color:white;
+    font-family: "Lato Light";
+    font-weight:60;
+    text-align: justify;
+    font-size:20px;
+    margin: 0;
+    position: absolute;
+    top: 57%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
 
 

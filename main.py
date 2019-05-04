@@ -11,11 +11,16 @@ def home():
 
 @app.route('/issues', methods=['POST', 'GET'])
 def result():
+    """
+    renders the html output based on the input url
+    """
     if request.method == 'POST':
         url = request.form['repo_url']
+        if not url:
+            return render_template('input.html', invalid=True)
         scraper = Scraper(url)
         if not scraper.check_validity():
-            return
+            return render_template('input.html', invalid=True)
         scraper.scrape()
         ctx = scraper.parse_and_render()
         return render_template("output.html", ctx=ctx)

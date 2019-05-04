@@ -8,11 +8,12 @@
 <div class="search-card">
   <form action = "http://localhost:5000/issues" method = "POST">
       <input class="search-input" type="text" name="repo_url" placeholder="Git repository url" />
-    <button class="search-button" type="submit" >Search</button>
+    <button class="search-button" type="submit" >Get Data</button>
   </form>
 </div>
-
-
+{% if invalid %}
+    <div class="invalid-input" >Please give a valid git repository url as input!</div>
+{% endif %}
 </body>
 </html>
 

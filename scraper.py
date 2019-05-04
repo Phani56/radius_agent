@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from collections import OrderedDict
 
-# data extraction classes in the html
+# Data extraction classes from html
 issues_entity = ['div', 'js-navigation-container js-active-navigation-container']
 issue_box = ['div', 'Box-row Box-row--focus-gray p-0 mt-0 js-navigation-item js-issue-row']
 data_box = ['span', 'opened-by']

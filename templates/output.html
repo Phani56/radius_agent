@@ -9,6 +9,7 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 
 <table class="table table-dark table-bordered">
+  {% if ctx %}
   <thead>
     <tr>
       <th scope="col">Time Frame</th>
@@ -16,20 +17,27 @@
     </tr>
   </thead>
   <tbody>
-  {% if ctx %}
     {% for k,v in ctx.iteritems() %}
         <tr>
           {% if k == 'total' %}
-          <td>Total number of Issues</td>
-             
+            <td>Total number of Issues</td>
+          {% elif k == 'past_day'%}
+            <td>Issues opened in past 24 Hours</td>
+          {% elif k == 'past_week'%}
+            <td>Issues opened in past week</td>
+          {% elif k == 'more_than_a_week'%}
+            <td>Issues opened more than a week ago</td>
+          {% endif %}
           <td>{{v}}</td>
         </tr>
     {% endfor %}
+  {% else %}
+    <div class="no-issues">This repo does not have any open issues</div>
   {% endif %}
   </tbody>
 </table>
 
-
+<a class="homepage" href="/">Back to search</a>
 
 </body>
 </html>
