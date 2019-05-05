@@ -7,7 +7,7 @@
 
 <div class="description" >Enter a Git-hub repository link to get the number of open issues</div>
 <div class="search-card">
-  <form action = "http://localhost:5000/issues" method = "POST">
+  <form action = "{{url_for('result')}}" method = "POST">
       <input class="search-input" type="text" name="repo_url" placeholder="Git repository url" />
     <button class="search-button" type="submit" >Get Data</button>
   </form>
