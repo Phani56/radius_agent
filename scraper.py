@@ -66,7 +66,7 @@ class Scraper():
     def week_flag(self, issue):
 
         """
-        keeps on adding data to the final dict until an issue is passes with time stamp more than 7 days. Makes the
+        keeps on adding data to the final dict until an issue is passed with time stamp more than 7 days. Makes the
         scrape function to stop by sending a page that is not present
         """
         now = datetime.now()
@@ -90,7 +90,7 @@ class Scraper():
     def scrape(self):
 
         """
-        scrapes all the issues if pagination is not present. If pagination pages with issues opened less than 7 days
+        scrapes all the issues if pagination is not present. If pagination, pages with issues opened less than 7 days
         ago are scraped
         """
         self.get_last_page()
