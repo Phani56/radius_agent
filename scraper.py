@@ -36,6 +36,10 @@ class Scraper():
             self.more_than_a_week += 1
 
     def get_last_page(self):
+
+        """
+        gets total number of open issues in the repo if pagination is present
+        """
         i = 1
         response = requests.get(self.url + "/issues?page={}&q=is%3Aissue+is%3Aopen".format(i))
         if response.status_code == 200:
@@ -60,6 +64,11 @@ class Scraper():
         return datetime.strptime(s[index:index + 20], date_format)
 
     def week_flag(self, issue):
+
+        """
+        keeps on adding data to the final dict until an issue is passes with time stamp more than 7 days. Makes the
+        scrape function to stop by sending a page that is not present
+        """
         now = datetime.now()
         issue_time_stamp = self.get_datetime(issue.find(data_box[0], {'class': data_box[1]}))
         time_passed = (now - issue_time_stamp).days
@@ -81,10 +90,10 @@ class Scraper():
     def scrape(self):
 
         """
-        scrapes all the issues until the last page and returns list of all the issue blocks(html)
+        scrapes all the issues if pagination is not present. If pagination pages with issues opened less than 7 days
+        ago are scraped
         """
         self.get_last_page()
-        print (self.total_issues)
         issues_data = True
         i = 1
         while issues_data:
@@ -102,6 +111,10 @@ class Scraper():
                     i += 1
 
     def send_final_data(self):
+
+        """
+        sends final data as context (to be passed into the html)
+        """
         if self.total_issues:
             self.ctx['total'] = self.total_issues
         else:
