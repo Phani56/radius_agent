@@ -47,7 +47,8 @@ class Scraper():
                 response = requests.get(self.url + "/issues?page={}&q=is%3Aissue+is%3Aopen".format(last_page))
                 soup = BeautifulSoup(response.content, 'html.parser')
                 issues_data = soup.find(issues_entity[0], {'class': issues_entity[1]})
-                self.total_issues = (last_page-1)*25 + len(issues_data)
+                issues = issues_data.find_all(issue_box[0], {'class': issue_box[1]})
+                self.total_issues = (last_page-1)*25 + len(issues)
                 self.scrape_all = False
             else:
                 self.scrape_all = True
@@ -101,6 +102,10 @@ class Scraper():
                     i += 1
 
     def send_final_data(self):
+        if self.total_issues:
+            self.ctx['total'] = self.total_issues
+        else:
+            self.ctx['total'] = self.past_day + self.past_week + self.more_than_a_week
         self.ctx['past_day'] = self.past_day
         self.ctx['past_week'] = self.past_week
         self.ctx['more_than_a_week'] = self.more_than_a_week
