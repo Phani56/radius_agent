@@ -22,7 +22,7 @@ def result():
         if not scraper.check_validity():
             return render_template('input.html', invalid=True)
         scraper.scrape()
-        ctx = scraper.parse_and_render()
+        ctx = scraper.send_final_data()
         return render_template("output.html", ctx=ctx)
 
 

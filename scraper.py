@@ -14,55 +14,96 @@ class Scraper():
 
     def __init__(self, url):
         self.url = url
+        self.scrape_all = False
+        self.total_issues = None
         self.issues = []
+        self.ctx = OrderedDict()
+        self.past_day = 0
+        self.past_week = 0
+        self.more_than_a_week = 0
 
     def check_validity(self):
         if 'github.com' not in self.url:
             return False
         return True
 
-    def scrape(self):
+    def add_data_to_dict(self, time_passed):
+        if time_passed == 0:
+            self.past_day += 1
+        elif 1 <= time_passed <= 7:
+            self.past_week += 1
+        elif time_passed > 7:
+            self.more_than_a_week += 1
 
-        """
-        scrapes all the issues until the last page and returns list of all the issue blocks(html)
-        """
-        issues_data = True
+    def get_last_page(self):
         i = 1
-
-        while issues_data:
-            response = requests.get(self.url + "/issues?page={}&q=is%3Aissue+is%3Aopen".format(i))
-            if response.status_code == 200:
+        response = requests.get(self.url + "/issues?page={}&q=is%3Aissue+is%3Aopen".format(i))
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.content, 'html.parser')
+            pages_data = soup.find('div', {'class': 'pagination'})
+            if pages_data:
+                pages = pages_data.find_all('a', href=True)
+                last_page = int(pages[-2].get_text())
+                response = requests.get(self.url + "/issues?page={}&q=is%3Aissue+is%3Aopen".format(last_page))
                 soup = BeautifulSoup(response.content, 'html.parser')
-                issues_data = soup.find( issues_entity[0], {'class': issues_entity[1]})
-                if issues_data:
-                    self.issues.extend(issues_data.find_all(issue_box[0], {'class': issue_box[1]}))
-                    i += 1
+                issues_data = soup.find(issues_entity[0], {'class': issues_entity[1]})
+                self.total_issues = (last_page-1)*25 + len(issues_data)
+                self.scrape_all = False
+            else:
+                self.scrape_all = True
+
 
     def get_datetime(self, s):
         s = str(s)
         index = s.find("datetime=") + len("datetime=") + 1
         return datetime.strptime(s[index:index + 20], date_format)
 
-    def parse_and_render(self):
-        ctx = OrderedDict()
-        if not self.issues:
-            return ctx
-        ctx['total'] = len(self.issues)
-        past_day = 0
-        past_week = 0
-        more_than_a_week = 0
+    def week_flag(self, issue):
         now = datetime.now()
-        for issue in self.issues:
-            issue_time_stamp = self.get_datetime(issue.find(data_box[0], {'class': data_box[1]}))
-            time_passed = (now - issue_time_stamp).days
-            if time_passed == 0:
-                past_day += 1
-            elif 1 <= time_passed <= 7:
-                past_week += 1
-            elif time_passed > 7:
-                more_than_a_week += 1
-        ctx['past_day'] = past_day
-        ctx['past_week'] = past_week
-        ctx['more_than_a_week'] = more_than_a_week
+        issue_time_stamp = self.get_datetime(issue.find(data_box[0], {'class': data_box[1]}))
+        time_passed = (now - issue_time_stamp).days
+        if time_passed > 7:
+            if self.scrape_all:
+                self.add_data_to_dict(time_passed)
+                return True
+            else:
+                if self.total_issues:
+                    self.more_than_a_week = self.total_issues - (self.past_day + self.past_week)
+                    return False
+                else:
+                    self.add_data_to_dict(time_passed)
+                    return True
+        else:
+            self.add_data_to_dict(time_passed)
+            return True
 
-        return ctx
+    def scrape(self):
+
+        """
+        scrapes all the issues until the last page and returns list of all the issue blocks(html)
+        """
+        self.get_last_page()
+        print (self.total_issues)
+        issues_data = True
+        i = 1
+        while issues_data:
+            response = requests.get(self.url + "/issues?page={}&q=is%3Aissue+is%3Aopen".format(i))
+            if response.status_code == 200:
+                soup = BeautifulSoup(response.content, 'html.parser')
+                issues_data = soup.find( issues_entity[0], {'class': issues_entity[1]})
+                if issues_data:
+                    for issue in issues_data.find_all(issue_box[0], {'class': issue_box[1]}):
+                        x = self.week_flag(issue)
+                        if x:
+                            continue
+                        else:
+                            i = self.total_issues + 1
+                    i += 1
+
+    def send_final_data(self):
+        self.ctx['past_day'] = self.past_day
+        self.ctx['past_week'] = self.past_week
+        self.ctx['more_than_a_week'] = self.more_than_a_week
+
+        return self.ctx
+
