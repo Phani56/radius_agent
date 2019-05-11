@@ -25,7 +25,7 @@ class Scraper():
             self.past_week += 1
 
     def week_flag(self, issue_time):
-        if (datetime.datetime.now() - issue_time).days:
+        if (datetime.datetime.now() - issue_time).days > 7:
             return False
         return True
 
