@@ -4,6 +4,12 @@ from scraper import Scraper
 app = Flask(__name__)
 
 
+def check_validity(url):
+    if 'github.com' not in url:
+        return False
+    return True
+
+
 @app.route("/")
 def home():
     return render_template("input.html")
@@ -18,10 +24,10 @@ def result():
         url = request.form['repo_url']
         if not url:
             return render_template('input.html', invalid=True)
-        scraper = Scraper(url)
-        if not scraper.check_validity():
+        if not check_validity(url):
             return render_template('input.html', invalid=True)
-        scraper.scrape()
+        scraper = Scraper(url)
+        scraper.get_data()
         ctx = scraper.send_final_data()
         return render_template("output.html", ctx=ctx)
 
