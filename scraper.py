@@ -37,7 +37,7 @@ class Scraper():
             i += 1
             args = {'since': str(self.time_frame), 'page': i}
             api_url = "https://api.github.com/repos/{}/{}/issues?{}".format(repo_details[0], repo_details[1],
-                                                                            urllib.urlencode(args))
+                                                                            urllib.parse.urlencode(args))
             response = requests.request("GET", api_url)
             response = json.loads(response.content)
             for issue in response:
