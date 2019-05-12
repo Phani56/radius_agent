@@ -63,6 +63,8 @@ class Scraper():
                                                                             urllib.parse.urlencode(args))
             response = requests.request("GET", api_url)
             response = json.loads(response.content)
+            if not response:
+                week = False
             for issue in response:
                 pull_request = issue.get('pull_request', None)
                 if not pull_request:
