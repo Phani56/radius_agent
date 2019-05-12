@@ -29,25 +29,50 @@ class Scraper():
             return False
         return True
 
+    def get_pull_requests_count(self):
+        """
+        gets count of open pull requests
+        """
+        repo_details = self.repo_url.strip().split('/')[-2:]
+        pull_requests = 0
+        i = 1
+        while True:
+            args = {'state': 'open', 'page': i, 'per_page': 100}
+            api_url = "https://api.github.com/repos/{}/{}/pulls?{}".format(repo_details[0], repo_details[1],
+                                                                           urllib.parse.urlencode(args))
+            response = requests.request("GET", api_url)
+            response = json.loads(response.content)
+            if not response:
+                return pull_requests
+            else:
+                pull_requests += len(response)
+                i += 1
+
     def get_data(self):
         repo_details = self.repo_url.strip().split('/')[-2:]
         i = 0
         week = True
+
+        """
+        gets all legit open issues in the past 7 days excluding pull requests
+        """
         while week:
             i += 1
-            args = {'since': str(self.time_frame), 'state': 'open', 'page': i}
+            args = {'since': str(self.time_frame), 'state': 'open', 'page': i, 'per_page': 100}
             api_url = "https://api.github.com/repos/{}/{}/issues?{}".format(repo_details[0], repo_details[1],
                                                                             urllib.parse.urlencode(args))
             response = requests.request("GET", api_url)
             response = json.loads(response.content)
             for issue in response:
-                issue_time = datetime.datetime.strptime(issue['created_at'], date_format)
-                self.add_data_to_dict((datetime.datetime.now() - issue_time).days)
-                week = self.week_flag(issue_time)
+                pull_request = issue.get('pull_request', None)
+                if not pull_request:
+                    issue_time = datetime.datetime.strptime(issue['created_at'], date_format)
+                    self.add_data_to_dict((datetime.datetime.now() - issue_time).days)
+                    week = self.week_flag(issue_time)
         api_url = "https://api.github.com/repos/{}/{}".format(repo_details[0], repo_details[1])
         response = requests.request("GET", api_url)
         response = json.loads(response.content)
-        self.total_issues = response['open_issues']
+        self.total_issues = response['open_issues'] - self.get_pull_requests_count()
         self.more_than_a_week = self.total_issues - (self.past_day+self.past_week)
 
     def send_final_data(self):
